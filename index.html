@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS - Colisão</title>
+    <style>
+        canvas{
+            border: 1px solid;
+        }
+    </style>
+</head>
+<body>
+    <canvas width="600" height="400"></canvas>
+</body>
+<script>
+    var canvas = document.querySelector("canvas")
+    var ctx = canvas.getContext("2d")
+
+    var LEFT = 37, UP = 38, RIGHT = 39, DOWN = 40
+    var SIZE = 50
+    var posicaoX = 50
+    var posicaoY = 50
+    var objColor = "#00f"
+
+    var blockX = canvas.width / 2 - SIZE / 2
+    var blockY = canvas.height / 2 - SIZE / 2
+
+    var moveLeft = moveUp = moveRight = moveDown = false
+
+    function updateBlock() {
+
+        if(moveLeft) {
+            posicaoX--
+        }
+        if(moveUp) {
+            posicaoY--
+        }
+        if(moveRight) {
+            posicaoX++
+        }
+        if(moveDown) {
+            posicaoY++
+        }
+    }
+
+    window.addEventListener("keydown", keydownHandler, false)
+    window.addEventListener("keyup", keyupHandler, false)
+
+    function keydownHandler(e) {
+        // alert(e.keyCode)
+        var key = e.keyCode
+        switch(key) {
+            case LEFT :
+                moveLeft = true
+                break
+            case UP :
+                moveUp = true
+                break
+            case RIGHT :
+                moveRight = true
+                break
+            case DOWN :
+                moveDown = true
+                break
+        }
+    }
+
+    function keyupHandler(e) {
+        // alert(e.keyCode)
+        var key = e.keyCode
+        switch(key) {
+            case LEFT :
+                moveLeft = false
+                break
+            case UP :
+                moveUp = false
+                break
+            case RIGHT :
+                moveRight = false
+                break
+            case DOWN :
+                moveDown = false
+                break
+        }
+    }
+
+    function colide() {
+        if( posicaoX + SIZE > blockX &&
+            posicaoX < blockX + SIZE &&
+            posicaoY + SIZE > blockY &&
+            posicaoY < blockY + SIZE ) {
+            objColor = "#f00"
+        } else {
+            objColor = "#00f"
+        }
+    }
+
+    function loop() {
+        window.requestAnimationFrame(loop, canvas)
+        update()
+        draw()
+    }
+
+    function update() {
+        updateBlock()
+        colide()
+    }
+
+    function draw() {
+        ctx.clearRect(0,0, canvas.width, canvas.height)
+        ctx.fillStyle = "#000"
+        ctx.fillRect(blockX, blockY, SIZE, SIZE)
+        ctx.fillStyle = objColor
+        ctx.fillRect(posicaoX,posicaoY,SIZE,SIZE)
+    }
+
+    loop()
+</script>
+</html>
